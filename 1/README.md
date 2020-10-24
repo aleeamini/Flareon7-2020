@@ -12,6 +12,6 @@ If you look at the fidler.py code you see a function: ```cat_clicked()``` that i
 but for run the game we can't use the fidler.exe because it is a compiled exe python.but we can install "pygame" package to run the game as a py file. 
 so after run the changed fidler.py and click on the cat two times we have the flag.  
 
-![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/1/flag.png)  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/1/flag.PNG)  
 
 

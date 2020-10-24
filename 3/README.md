@@ -1,8 +1,8 @@
-#3-wednesday
+# 3-wednesday
 
 This is a score game and you must get a specific score at this game to shows you the flag.  
 When i debuged it, i saw strings ```Score``` and ```HighScore``` in the screen of game. searched them in the memory of the file and find the address of them.  
-![alt text]
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/3/find_hotspot.png)  
 
 I set some breakpoints in this function and traced the game,I found that the game checks some rules and increase the score or restart the game.  
 In the game we have two types of block: M blocks and F blocks. we should pass from under the M blocks and jump from F blocks. so we can get one score.  
@@ -13,10 +13,10 @@ After some checking the functions and static analysis in IDAPro, i found two int
 I set bp in these functions to find when they are called. and found that when the frog collides to blocks, these functions is called. one of is for M blocks and another for F.  
 So i patched the game in a way that bypass the collides and continueing the game.  
 
-##Patches:
+## Patches:
 collide1:(for M blocks) at address `0x43222a`: chnage the ```JNE``` to ```JMP``` to continue the game after collide to M blocks.  
 collide1:(for F blocks) at address `0x432358`: chnage the ```JE``` to ```JMP``` to continue the game after collide to F blocks.  
 
 after that i saved the file and ran it and let it to go until it reaches the 296 of score.  
 And we have the flag:  
-![alt text]
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/3/flag.png)  

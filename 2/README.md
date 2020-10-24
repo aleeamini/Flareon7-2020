@@ -17,7 +17,7 @@ Do this job until arrive at a function at address ```0x4013e6```. step into this
 And when this function is finished, we see a valid string. so we can assume that this function is the decoder.  
 Continue debugging and bypass every instruction that throw exeption and see another call to ```0x401000```. step over and a ```MsgBox``` string appears.  
 We will see the flag in it.  
-![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/2/invalid-addr.png)  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/2/flag.png)  
 
 
 

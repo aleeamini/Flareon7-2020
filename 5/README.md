@@ -1,7 +1,7 @@
 # 5-TKApp
 This is very very simple. Just you don't fooling with it's name.  
 The file is a TPK file that is a zip file which contains some dlls that unpack and run under a linux with .NetFramework().like apk files.    
-The platform is a popular OS for smart watchs and wearable devices.  You can download the emulator and run the TKAPP in it. the emulater software is ```Tizen```.  But you don't need it for solving this challenge. you could do it with just some static analysis in ```dbSpy```.  
+The platform is a popular OS for smart watchs and wearable devices.  You can download the emulator and run the TKAPP in it. the emulater software is ```Tizen```.  But you don't need it for solving this challenge. you could do it with just some static analysis in ```dnSpy```.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/5/watch.png)  
 
 ## First Section:  

@@ -1,5 +1,5 @@
 # 6-codeit  
-
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/sprite.bmp)  
 At first glance it is a UPX packed exe file. Unpack it with UPX and we see that file doesn't run.  
 This is a trick for Anti-unpacking. The malware author used some Hardcoded address in the malware code which if you unpack the malware, the unpacked version overwrite those addresses  
 and the unpacked malware doesn't run.
@@ -19,27 +19,27 @@ and after that the script used these junk value in it's functions parameters. so
 I wrote a ```Regex``` script for replace them with their values, and run this ```Regex``` in the ```Notepad++``` find and replace menu.  
 I used from a special format of ```Regex```, ```Dictionary Regex```. i make a dict from those junk variables,, with their value and use it in my regex query.  
 This is Regex1 query and it is for replacing the junk variables with their numbers. before run this query, remove all junk variables from the script:  
-![alt text](remove_junks)  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/remove_junks.png)  
   
   
-```(?sx)\b(\w+)\b(?=.*:\1=(\w+)\b)```  
+### Regex1: ```(?sx)\b(\w+)\b(?=.*:\1=(\w+)\b)```  
 while you are using this query for replacing the junk variabls, you must put the dictionary text at the end of your script file. the ```Dict1.txt``` file contains a dictionary of junk variables and their values. 
-![alt text](run_regex1)  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/run_regex1.png)   
 
 Now we have this after runing ```Regex1```  
 
-![alt text](after_run_regex1)  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/after_run_regex1.png)  
 as you see there is no junk variables in functions arguments and you should remove the junk variables from script. but we need a little cleaning. You see the ```$``` sign before numbers that must remove.
 
-Regex2: ```\$([0-9]\])``` for remove all $ sign from before the numbers.  
-
+### Regex2: ```\$([0-9]\])``` for remove all $ sign from before the numbers.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/after_regex2.png)  
 ## Third Section:  
 there is another obfuscation that you can see in ```areihnvapwn()``` function. this function split a long byte array and write it in ```os``` global variable. and after that other functions calls a function(```arehdidxrgk```) and send an index of ```os``` to  
 it and the this function, decode that array and sends back to the caller. so we should find what is these value.  
 For this i wrote a python script that decode these bytes. but we should replace the decoded value with these calls to the ```arehdidxrgk()``` function.  
 OK like the previous section i used a regex query. but we should run the pyhton script for decoding and put it's output as a dictionary(like previous section).  
 Run the ```deobfuscate.py``` and it gives you a txt file contains a dict format of decoded value. copy it and paste at the end of your script and run the third regex query:  
-Regex3: ```(?sx)(arehdidxrgk\(\$os\[.+?\]\))(?=.*:\1= \|([\$,\#,\!,\{,\},\[,\],\;a-z,A-Z,0-9, \\,\/,\.,\-,\(,\),\:,©,*]*))```  
-![alt text](after_run_regex3)  
+### Regex3: ```(?sx)(arehdidxrgk\(\$os\[.+?\]\))(?=.*:\1= \|([\$,\#,\!,\{,\},\[,\],\;a-z,A-Z,0-9, \\,\/,\.,\-,\(,\),\:,©,*]*))```  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/after_regex3.png)  
 
 now we have a deobfuscated code. and now we could find what happend in the script.  

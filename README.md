@@ -1,2 +1,2 @@
-# Flareon7-2020-
-my writeups fro the flareon7 challenge 
+# Flareon7-2020
+my writeups for the flareon7 challenge 

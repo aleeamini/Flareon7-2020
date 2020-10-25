@@ -56,27 +56,28 @@ Func Get_ComputerName()
 EndFunc
 ```  
 This function gets the computer name and after that the compyter name string is sends to another function that does some Xor. ```aregtfdcyni()```  
-```
-For $i = 1 To DllStructGetSize($arg1)
-					Local $varloc6 = Number(DllStructGetData($arg1, 1, $i))
-					For $j = 6 To 0 Step -1
-						$varloc6 += BitShift(BitAND(Number(DllStructGetData($varloc5, 2, $varloc4)), 1), -1 * $j)
-						$varloc4 += 1
-					Next
-					$varloc7 &= Chr(BitShift($varloc6, 1) + BitShift(BitAND($varloc6, 1), -7))
-				Next```  
+
+```For $i = 1 To DllStructGetSize($arg1)
+	Local $varloc6 = Number(DllStructGetData($arg1, 1, $i))
+	For $j = 6 To 0 Step -1
+		$varloc6 += BitShift(BitAND(Number(DllStructGetData($varloc5, 2, $varloc4)), 1), -1 * $j)
+		$varloc4 += 1
+	Next
+	$varloc7 &= Chr(BitShift($varloc6, 1) + BitShift(BitAND($varloc6, 1), -7))
+Next```  
+
+
 In this function in the nested loop, we see a ```local6``` that is ```Number(DllStructGetData($arg1, 1, $i))```. If you debug the code you see this is the computer name strings.  But after this, we see a value shifted ```$varloc6 += BitShift(BitAND(Number(DllStructGetData($varloc5, 2, $varloc4)), 1), -1 * $j)``` . This is a interting value. For find what is this value we should set the ```local6``` to 0.  
 
 ```For $i = 1 To DllStructGetSize($arg1)
-					Local $varloc6 = 0
-					For $j = 6 To 0 Step -1
-						$varloc6 += BitShift(BitAND(Number(DllStructGetData($varloc5, 2, $varloc4)), 1), -1 * $j)
-						$varloc4 += 1
-					Next
-          ConsoleWrite(Hex($varloc6) & @CRLF) 
-					$varloc7 &= Chr(BitShift($varloc6, 1) + BitShift(BitAND($varloc6, 1), -7))
-				Next```  
-        
+	Local $varloc6 = 0
+	For $j = 6 To 0 Step -1
+		$varloc6 += BitShift(BitAND(Number(DllStructGetData($varloc5, 2, $varloc4)), 1), -1 * $j)
+		$varloc4 += 1
+	Next
+ConsoleWrite(Hex($varloc6) & @CRLF) 
+$varloc7 &= Chr(BitShift($varloc6, 1) + BitShift(BitAND($varloc6, 1), -7))
+Next```  
 Now run the script in autoit and we see the string ```aut01tfan1999``` is printed. Now we should change the computername to this value and restart the windows and run the codeit.exe and it gives us a QRcode, scan it in an online qr decoder and it gives you the flag.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/finalFlag.bmp)  
 

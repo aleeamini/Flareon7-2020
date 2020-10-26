@@ -1,27 +1,27 @@
 # 7-re_crowd  
 ## First Section:  
-This challenge is just a PCAP file. At the first open it in the Wireshark and we see some HTTP GET requests and responses.  
+This challenge is just a PCAP file. At the first place open it in the Wireshark, we see some HTTP GET requests and responses.  
   
   
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/httpreq.png)  
 
-Open it in the ```NetworkMiner``` software to extract the content of this pcap file. To import the dump to NetworkMiner, you must convert it to a .pcap file. Ok now NetworkMiner, gives us a html file and some pictures. When you open the html file, you see a site like a forum that some people chatted on and if you read them you find that a password file is stored in the ```C:\Accounts.txt``` file.  
+For extracting the content of that webpage, Open it in the ```NetworkMiner``` software to extract the content of this pcap file. To import the dump to NetworkMiner, you must convert it to a .pcap file. Ok now NetworkMiner, gives us a html file and some pictures. When you open the html file, you see a site like a forum that some people chatted on and if you read them you find that a password file is stored in the ```C:\Accounts.txt``` file.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/chats.png)  
   
 Ok but this is not enough for this challenge and there isn’t any other useful data for us.  
-Now if we look at the dump again in the Wirershark we see that the some unusual HTTP requests has been sent to the server(```192.168.68.1```) and the server answered these request with ```Internal Service failure```.  
+Now if we look at the dump again in the Wirershark we see that some unusual HTTP requests has been sent to the server(```192.168.68.1```) and the server answered these requests with ```Internal Service failure```.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/http_susp.png)  
 
-If you search ```PROPFIND``` in the Google you find that this is a tag of ```WebDAV``` protocol.  
+If you search ```PROPFIND``` in the Google you find that this is a tag for ```WebDAV``` protocol.  
 ```WebDAV``` is an extension of ```HTTP``` that allows the clients to do some operations like move and change files data, on a server.  
 So probably we have a remote attack here. If you search WebDAV vulnerabilities, you find a related vulnerability that is a RCE type. This vulnerability is in the ```IIS6.0```.   
 For more details: [CVE-2017-7269](https://www.trendmicro.com/en_us/research/17/c/iis-6-0-vulnerability-leads-code-execution.html)    
-I found a python script for this vulnerability from exploitdb.com and found it is like those data in the dump.  
+I found a python script for this vulnerability from exploitdb.com and found out that it is like those data in the dump.  
 (shellcode script)[https://www.exploit-db.com/exploits/41738]  
   
 ## Second Section:  
 If you scroll down the pcap dump file, after some ```PROPFIND``` requests, and failure responses, a PROPFIND request is sent and then a connection is stablished on the ```4444``` port on ```192.168.68.21```.  The ```4444``` is for ```Metasploit```.  
-The exploit mechanism in the ```Metasploit``` is in this way that start sending some junk data with different size plus the shellcode, to the server until one of them successfully runs and can connect back to the attacker 4444 port. So the previous failed requests are those requests which the size of junk data isn’t enough to exploit the service. But the last one is the correct attack vector (the 284th packet in the dump). So we can use this packet for our shellcode.  
+The exploit mechanism in the ```Metasploit``` ,in this way, is that it starts sending some junk data with different size plus the shellcode, to the server until one of them successfully runs and can connect back to the attacker 4444 port. So the previous failed requests are those requests which the size of junk data isn’t enough to exploit the service. But the last one is the correct attack vector (the 284th packet in the dump). So we can use this packet for our shellcode.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/stablished.png)  
 
 I used this packet, and replace its data with those bytes that is in the downloaded script from exploit-db. Look at ```sc.py``` file.  

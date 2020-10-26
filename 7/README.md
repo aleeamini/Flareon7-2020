@@ -28,7 +28,7 @@ I used this packet, and replace its data with those bytes that is in the downloa
 Now it is time to gets your hand dirty and dive in the exploit.  
 The vulnerability is in the ```IIS6.0``` service and you could find it on ```Windows server 2003```.  You can download the vulnerable version from here.[WindowsServer2003](https://ia601008.us.archive.org/22/items/WINSRV2003_R2EE/Windows_2003_Server.iso)  
 Install windows-server 2003 in a VM and active IIS service and WebDAV. Change its IP to ```192.168.68.1```. Now the server machine is ready.  
-### Tip: You must set your server IP to 192.168.68.1 and your attacker IP to: 192.168.68.21.   
+#### Tip: You must set your server IP to 192.168.68.1 and your attacker IP to: 192.168.68.21.   
 Ok now you can run the attack script and exploit the server. But before run the script, you should open the 4444 port on your machine in listen mode. I used netcat for this job:
 ```nc -lvvp 4444```  
 Now when you run the script, you should see a connection comes to 4444 port.  
@@ -63,7 +63,10 @@ Trace the ```w3wp``` and after that the socket function is finished, We see a st
   
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/accounts.png)  
   
-You could dump it and analyze the dump in the IDAPro. This code reads the C:\accounts.txt file from the server, creates a 256 bytes key with ```interpidMango``` string and encrypts the file contents with this key. The encryption is a xor algorithm and then sends these data to 1337 on the attacker system. So those 297 bytes that comes to 1337 is the ```C:\accounts.txt``` file content and we must decrypt these bytes to find the flag.  
+You could dump it and analyze the dump in the IDAPro. This code reads the C:\accounts.txt file from the server, creates a 256 bytes key with ```interpidMango``` string and encrypts the file contents with this key.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/key_gen.png)   
+  
+The encryption is a xor algorithm and then sends these data to 1337 on the attacker system. So those 297 bytes that comes to 1337 is the ```C:\accounts.txt``` file content and we must decrypt these bytes to find the flag.  
 I extract the 256 encryption key dynamically from the debugger and you could see in ```enc_key.txt```. And also I reversed the XOR algorithm and wrote a Python script for decryption (```decryptor.py)```  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/flag.png)  
   

@@ -1,8 +1,8 @@
 # 4-report  
-##First Section:
+## First Section:
 This is a VisualBasic Macro that sored in a excel file.  
-When opening the vbs script in VisaulBasic, I saw it has a form(F) which stores two long strings value in a textbox and a label object.  
-Also the script has a ```Sheet1``` file that in it is whole the code of the malware.  
+When opening the vbs script in VisaulBasic, I see it has a form(F) which stores two long strings value in a textbox and a label object.  
+Also the script has a ```Sheet1``` file that in it, is the code of the malware.  
 The start function is ```Sheet1.folderol```. this function is the main function and at the first uses ```Split()``` to split the ```F.L```(Label of the main Form), and save in  
 ```onzo``` array and after that sends this array to ```rigmarole()```.  
 I decided to run the script and debug it. But there is some problems that cause script doesn't run.  
@@ -41,3 +41,5 @@ KEY= ```4E 4F 2D 45 52 41 4C 46```
 replace the new KEY in ```xertz``` array and change the start of loop in ```canoodle()``` to 3 and run the script and you see the png file. if you don't change the size of the file from 168667 to a bigger number, the png is imperfect. you could change this value until you see the complete png.  
 The final script is in ```final-script.txt``` file.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/4/v.png)  
+
+```Flag:thi5_cou1d_h4v3_b33n_b4d@flare-on.com```

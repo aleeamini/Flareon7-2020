@@ -18,6 +18,8 @@ The idea is to patch the file and change the ```X``` for ```O``` and vice versa.
 The engine file is embedded in the main executable, so you can use a Hex-editor to find these instruction and patch them statically. For example ```3C 58```, compare the ```al``` with ``` 0x58 or X```. I search the ```3C58``` in the Hex Editor and change the ```0x58``` to ```0x4F or O```.  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/swapxo.png)  
 Now run the game and let the X to wins the game. Ok now we see a string like the flag. But it isn’t the correct flag.  
+ ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/notflag.png)  
+   
 Let’s look at the function that generates the flag. At the ```0f27``` we see a ```xor``` instruction in a loop that iterates an array.  
 And it xors the elements of the array with ```AL``` register.  
 What is the ```AL```? OK we see a call that probably ```AL``` is the return value of this call. So we should debug it to find out the return value. But how we can debug it?  

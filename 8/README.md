@@ -10,6 +10,8 @@ Now you can run the executable and see this is a tic-tac-toe game. I played it a
 Let’s do some analysis. When you open the file in the ```Resource Hacker``` you see an ELF file is included in the executable file. Extract it and open it in the ```IDAPro```, you see this is the game engine. The game has 2 section:  
 1. The UI that runs in the Windows  
 2. The engine that runs in the Linux at background  
+  
+  
 Ok I thought, I must the winner, to get the flag. If you look at the engine's code, you see a branch which used for checking the winner:  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/check_the_winner.png)  
 The idea is to patch the file and change the ```X``` for ```O``` and vice versa. But how we can patch the file? It’s simple.  

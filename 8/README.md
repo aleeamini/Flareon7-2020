@@ -1,5 +1,5 @@
 # 8-ttt2  
-This is special challenge which is use the new future of Windows 10, WSL. The WSL is an embedded Linux OS in the windows that lets you to run the Linux files in it. For more info read [this]( https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)  
+This is special challenge which is use the new feature of Windows 10, WSL. The WSL is an embedded Linux OS in the windows that lets you to run the Linux files in it. For more info read [this]( https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)  
   
 OK at first, I run the ```ttt2.exe``` file and it shows me an error message :``` CoCreateInstance failed```  
 When I traced the exe file, I found out that the executable, does some checks about OS version. And I found out that, should use one the below version of Windows 10 version:   

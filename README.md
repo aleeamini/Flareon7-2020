@@ -1,8 +1,8 @@
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/FLARE-On%207.png)  
 # Flareon7-2020
 This year I started the Flareon2020 challenge a week late but i could finish it.  
-The number of challenges was less that last year but was harder.  
-I ranked 359 in the scoreboard  in this year. I wrote a short and simple write-up for challenges in this repo. Also I put all files and texts you need for solve the challenges.  
+The number of challenges was less that last year but was harder. I ranked 359 in the scoreboard  in this year.  
+I wrote a short and simple of my write-ups for the challenges in this repo. Also I put all files and texts you need for solve the challenges.  
 Hope enjoy :)
 
 ## [Challange1: fidler](https://github.com/aleeamini/Flareon7-2020/tree/main/1)  

@@ -2,6 +2,7 @@
 # Flareon7-2020
 This year I started the Flareon2020 challenge a week late but i could finish it.  
 The number of challenges was less that last year but was harder. I ranked 359 in the scoreboard  in this year.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/flare7.jpg)    
 I wrote a short and simple of my write-ups for the challenges in this repo. Also I put all files and texts you need for solve the challenges.  
 Hope enjoy :)
 

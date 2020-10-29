@@ -5,7 +5,7 @@ The number of challenges was less than last year, but was harder. I ranked 359 i
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/flare7.jpg)    
 I wrote a short and simple of my write-ups for the challenges in this repo. Also I put all files and texts you need for solve the challenges.  
 Hope enjoy :)
-
+## Tip: The password of all 7z files is "flare".  
 ## [Challange1: fidler](https://github.com/aleeamini/Flareon7-2020/tree/main/1)  
 ## [Challange2: garbage](https://github.com/aleeamini/Flareon7-2020/tree/main/2)  
 ## [Challange3: wednesday](https://github.com/aleeamini/Flareon7-2020/tree/main/3)  

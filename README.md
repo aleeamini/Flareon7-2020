@@ -5,10 +5,10 @@ The number of challenges was less that last year but was harder.
 I ranked 359 in the scoreboard  in this year. I wrote a short and simple write-up for challenges in this repo. Also I put all files and texts you need for solve the challenges.  
 Hope enjoy :)
 
-Challange1: fidler(https://github.com/aleeamini/Flareon7-2020/tree/main/1)  
-Challange2: garbage(https://github.com/aleeamini/Flareon7-2020/tree/main/2)  
-Challange3: wednesday(https://github.com/aleeamini/Flareon7-2020/tree/main/3)  
-Challange4: report(https://github.com/aleeamini/Flareon7-2020/tree/main/4)  
+## [Challange1: fidler](https://github.com/aleeamini/Flareon7-2020/tree/main/1)  
+## [Challange2: garbage](https://github.com/aleeamini/Flareon7-2020/tree/main/2)  
+## [Challange3: wednesday](https://github.com/aleeamini/Flareon7-2020/tree/main/3)  
+## [Challange4: report](https://github.com/aleeamini/Flareon7-2020/tree/main/4)  
 Challange5: TKApp(https://github.com/aleeamini/Flareon7-2020/tree/main/5)  
 Challange6: codeit(https://github.com/aleeamini/Flareon7-2020/tree/main/6)  
 Challange7: re_crowd(https://github.com/aleeamini/Flareon7-2020/tree/main/7)  

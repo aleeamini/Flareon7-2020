@@ -23,15 +23,15 @@ onzo(11):"\Microsoft\v.png"
 ```
 The script has a mechanism for detecting VirrtualMachine. it runs the ```SELECT Name FROM Win32_Process``` query to get the machine processor and search in it, the ```vmw,wmt``` strings.  
 ## Second Section:
-After checking the VM and InternetConection, now the script sends the textbox's string(```F.T```) to ```canoodle()``` function and after that writes the output in a file in ```AppData\Microsoft\stomp.mp3```.  
-Continue debugging to find what is this mp3 file.  
+After checking the VM and InternetConection, now the script sends the textbox's string (```F.T```) to ```canoodle()``` function and after that writes the output in a file in ```AppData\Microsoft\stomp.mp3```.  
+Continue debugging to find what is this mp3 file?  
 The ```canoodle()``` is a decoder. it takes a buffer of encoded bytes and xor them with ```xertz``` array and returns the result.  
-The mp3 file is a dummy file. and there isn't any usefull info. But i saw in ```onzo(11)``` a png filename ```v.png``` so i guesed that there is another encoded file.  
-If you look at the ```F.T``` string, it's lenght is 1142916 bytes, while the script just sends 168667 bytes of it in the ```canoodle()``` function. So the rest of the bytes is another file.  
+The mp3 file is a dummy file. and there isn't any useful info. But I saw in ```onzo(11)``` a png filename ```v.png``` so I guessed that there is another encoded file.  
+If you look at the ```F.T``` string, it's length is 1142916 bytes, while the script just sends 168667 bytes of it in the ```canoodle()``` function. So the rest of the bytes is another file.  
 ## Third Section:
-If we look at ```canoodle()``` function, it iterates over the ```F.T``` and does some calculation for select one byte from the string and xor it with one of element of the ```xertz``` array. but there is a significant command. the loop increamneted by 4 and start at 1. in this case one byte is left out. so the png file's bytes is between the mp3's bytes.  
+If we look at ```canoodle()``` function, it iterates over the ```F.T``` and does some calculation for select one byte from the string and xor it with one of element of the ```xertz``` array. but there is a significant command. the loop incremented by 4 and start at 1. in this case one byte is left out. so the png file's bytes is between the mp3's bytes.  
 ok until now we found that the bytes of png file start at index 2 and our step should be 4 (for left out the mp3 bytes. so the loop start with 3). but there is another problem.  the data is xored with an array(```xertz```) and we should find correct array for png file?  
-OK at this moment i used a png file and look at the it's header. so we have the header of png file and also the encoded data of the header in the ```F.T``` so we just find the key with xoring the encoded data and the header bytes.
+OK at this moment I used a png file and look at the it's header. so we have the header of png file and also the encoded data of the header in the ```F.T``` so we just find the key with xoring the encoded data and the header bytes.
 ```89 50 4E 47 0D 0A 1A 0A``` : PNG header
 XOR With:
 ```c7 1f 63 02 5f 4b 56 4c``` : 8 first bytes of F.T (the mp3's bytes is left out)

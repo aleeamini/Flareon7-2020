@@ -42,4 +42,4 @@ replace the new KEY in ```xertz``` array and change the start of loop in ```cano
 The final script is in ```final-script.txt``` file.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/4/v.png)  
 
-```Flag:thi5_cou1d_h4v3_b33n_b4d@flare-on.com```
+### ```Flag:thi5_cou1d_h4v3_b33n_b4d@flare-on.com```

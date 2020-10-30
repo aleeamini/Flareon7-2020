@@ -33,4 +33,4 @@ Now the executable file is something like this:
 Now run the game and let the ```X``` wins the game and now we have the flag. The flag is a unusual one but this the rabbit’s hole and you may think this is not the correct flag and try for find it. But the correct flag is it.  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/flag.png) 
 
-###```Flag:c1ArF/P2CjiDXQIZ@flare-on.com```
+### ```Flag:c1ArF/P2CjiDXQIZ@flare-on.com```

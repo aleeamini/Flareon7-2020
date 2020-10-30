@@ -72,4 +72,4 @@ The encryption is a xor algorithm and then sends these data to 1337 on the attac
 I extract the 256 encryption key dynamically from the debugger and you could see in ```enc_key.txt```. And also I reversed the XOR algorithm and wrote a Python script for decryption (```decryptor.py)```  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/7/flag.png)  
   
-```Flag:h4ve_you_tri3d_turning_1t_0ff_and_0n_ag4in@flare-on.com```
+### ```Flag:h4ve_you_tri3d_turning_1t_0ff_and_0n_ag4in@flare-on.com```

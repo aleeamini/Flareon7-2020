@@ -41,7 +41,7 @@ Run the ```deobfuscate.py``` and it gives you a txt file contains a dict format 
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/after_regex3.png)  
 
 Now we have a deobfuscated code, and now we could find what happened in the script.  
-I short the story. The script gets a string from the user and does some calculation on it and make a QR code. But there is a function that i named it ```Get_ComputerName()```  
+Long story short. The script gets a string from the user and does some calculation on it and make a QR code. But there is a function that i named it ```Get_ComputerName()```  
 
 ```
 Func Get_ComputerName()

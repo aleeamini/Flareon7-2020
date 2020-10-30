@@ -13,4 +13,6 @@ What you need to solve this challenge is that copy the whole code from dnspy and
 My decryptor program is here. just create a C# project and run this code. The ```Runtime.dll``` file is a jpg file and flag is in it.  
 ###Tip: You need ```ExifLibrary``` to run the decryptor.
 
-![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/5/runtime.jpg)
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/5/runtime.jpg)    
+### ```Flag:n3ver_go1ng_to_recov3r@flare-on.com```    
+

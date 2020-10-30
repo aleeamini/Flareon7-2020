@@ -85,5 +85,5 @@ Next
 Now run the script in Autoit and we see the string ```aut01tfan1999``` is printed. Now we should change the computername to this value and restart the windows and run the codeit.exe and it gives us a QRcode, scan it in an online QR decoder and it gives you the flag.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/6/finalFlag.bmp)  
 
-Flag is: ```L00ks_L1k3_Y0u_D1dnt_Run_Aut0_Tim3_0n_Th1s_0ne!@flare-on.com```
+### ```Flag:L00ks_L1k3_Y0u_D1dnt_Run_Aut0_Tim3_0n_Th1s_0ne!@flare-on.com```
 

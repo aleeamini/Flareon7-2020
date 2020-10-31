@@ -12,7 +12,7 @@ There is a function that decrypt a file ```Runtime.dll``` this is the target fil
 What you need to solve this challenge is that copy the whole code from dnspy and copy it to a C# project and run it to find the flag. I am too lazy for debug it step by step :D.  
 My decryptor program is here. just create a C# project and run this code. The ```Runtime.dll``` file is a jpg file and flag is in it.  
 ###Tip: You need ```ExifLibrary``` to run the decryptor.  
-```
+```csharp
 using System;
 using System.Collections.Generic;
 using System.Linq;

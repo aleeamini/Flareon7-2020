@@ -2,7 +2,7 @@
 ## First Part:
 this is very simple.
 When you run the fidler.exe file, it shows a password box. the password checker function is a simple function.  copy the ```password_check()``` in a new file and run it with python and print the 'key' value: "ghost".    
-```
+```python
 def password_check(input):
     altered_key = 'hiptu'
     key = ''.join([chr(ord(x) - 1) for x in altered_key])

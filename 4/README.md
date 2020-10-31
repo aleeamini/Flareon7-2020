@@ -40,7 +40,7 @@ KEY= ```4E 4F 2D 45 52 41 4C 46```
 
 replace the new KEY in ```xertz``` array and change the start of loop in ```canoodle()``` to 3 and run the script and you see the png file. if you don't change the size of the file from 168667 to a bigger number, the png is imperfect. you could change this value until you see the complete png.  
 The final script is in ```final-script.txt``` file.      
-```
+```VB
 Function rigmarole(es As String) As String
     Dim furphy As String
     Dim c As Integer

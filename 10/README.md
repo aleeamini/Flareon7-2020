@@ -339,5 +339,93 @@ fd.close()
 ```  
 I ran this script in the IDAPro and when it finishes, the result writes in the ```pass``` file.  
 The second part is:  
-#### ```Password_Part2: 4nD_0f_De4th_4nd_d3strUct1oN_4nd```  
+#### ```Password_Part2: 4nD_0f_De4th_4nd_d3strUct1oN_4nd```    
+
+OK we need another part of password. The whole file have analyzed and there isn’t any special trick or tip. But where should we search for third part of the password? There is only one thing. The 40K encrypted buffer. We should find out what is these bytes. We have 2 ways to extract the encrypted buffer (I say encrypted because the algorithm is used for encryption is a tiny which doesn’t matter you use its encrypt function or decrypt function, both of them could use for encryption or decryption. but it depends which of them is used.) Now we reverse the encryption and could use it to encrypt the file buffer and then find out what are these data.  
+```Python
+def KEYINT(k):
+    num = 0x9C40
+    for i in range(0, num // 4, 2):
+        key = 0x674a1dea4b695809 ## the crc64 value
+        for j in range(16):
+            kk1, k0 = (key & 0xffffffff00000000) >> 32, key & 0xffffffff
+            idx = (j * 8 * 32) - j * 8
+            k[idx + 7]  = k0
+            k[idx + 19] = kk1
+
+            cnt = 0
+            key2 = key
+            while key2:
+                if key2 & 1:
+                    cnt += 1
+
+                key2 >>= 1
+
+            k[idx + 41] = (cnt + (cnt & 1)) // 2
+            odd = False
+            if key & 1:
+                odd = True
+            key = (key >> 1) & 0xffffffffffffffff
+            if odd:
+                key = key ^ ((0x9E3779B9 << 32) | 0xC6EF3720)
+
+def enc(data,a4):
+    
+    v1 = data[0]
+    v2 = data[1]
+    for j in range(16):
+        idx = (j * 8 * 32) - j * 8
+        var6 = v1 ^ a4[idx + 19]
+        var3 = (v2 + a4[idx + 7]) & 0xffffffff
+        var4 = ((var3 >> (a4[idx + 41] & 0x1F)) | (var3 << (-(a4[idx + 41] & 0x1F) & 0x1F))) & 0xffffffff
+        var6 = var6 ^ var4 
+        v1 = v2
+        v2 = var6
+
+    data[0] = v2
+    data[1] = v1    
+
+key=[0]*3968;
+v=[0]*2
+f=[0]*10000
+j=0
+KEYINT(key)    
+for i in range(0,10000,2):
+    v[0]=ida_bytes.get_dword(0x804C640+i*4)
+    v[1]=ida_bytes.get_dword(0x804C640 +(i+1)*4)
+    enc(v,key)
+    f[j]=v[0]
+    f[j+1]=v[1]
+    j=j+2
+
+fd = open("shellcode","wb")
+for st in f:
+    fd.write(struct.pack('<I', st))
+fd.close()  
+```    
+I ran this script in IDAPro and we have the 40K buffer in the shellcode file.  
+When open the shellcode file in a hex-editor you see that this file is a text file. But you see some unreadable bytes between these strings. If you open the file in the IDAPro, it could detects functions and codes of this file. But where is the start point of the file and where should we start our analyzing?  Let’s change our question. How this shellcode is run in the code?  
+Maybe there is another trick that we should find it. The shellcode decrypted and went to the truncate function. Then truncate, checks the first 32 bytes of it and…? We should analyze it deeper.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/36.png)  
+This image is from `truncate` branch. There is a smart trick, and you should find it cleverly. There is a loop that iterate the file buffer and moves bytes of file buffer to another buffer with ``` var_3F4C``` name (in 2), and every time checks the value of file buffer with zero (in 1). The file buffer has 40K of bytes and the ``` var_3F4C``` just has 13360 of bytes. Also there isn’t a check for the size in this loop.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/37.png)  
+So if the moving continue until the end of file buffer, we have an overflow.  So find out when the loop breaks. For this we should find the first zero byte in the shellcode or file buffer that have extracted from the IDA.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/38.png)  
+Ok so the first zero byte is at offset ```3F20```. So 16160 bytes of file buffer, will copy to ```var_3F4C```. But this buffer has 13360 of bytes length!! So we have an overflow. Ok let’s continue. For example the loop reaches at the first zero byte and breaks. Now the buffer of password pushes to stack and the value of ```var_28``` that is zero goes to eax and the child1 calls the eax. But wait a minute. Are you sure the value of ```var_28``` is zero?  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/39.png)  
+We have an overflow and if you do some calculation you find out that the var_28 is affected with the overflow.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/40.png)  
+
+```
+Size of var_3F4C buffer: 13360  
+Copied bytes: 16160  
+Diff var_3F4C and var_28 = 3f4c-28=16164  
+```
+Based on our calculations, the last 4 bytes is in the var_28. What is these bytes?  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/41.png)  
+Ok so we find out that ```call eax``` is actually ```call 0x08053B70``` (the value of var_28 in little endian).  This is the entry point of the shellcode. :D  this address is an address at middle of file buffer. The child1 just change the program routine to an address in itself.  
+Ok now we know the entrypoint of the shellcode. But we need just its offset because we analyze the shellcode file seprately in IDAPro. So the etrypoint offset is:  
+``` the shellcode entrypoinnt - file buffer base addr = 0x08053B70 - 0x0804C640 = 0x7530```  
+Now open the shellcode in IDAPro and go to 0x7530 offset:  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/42.png)  
 

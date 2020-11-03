@@ -6,10 +6,10 @@ So what happened there? You decide to debug it in the gdb. But when you open it 
 Ok continue analyzing the file statically and you see that the program uses an ```ini``` function that is interesting for us.  
 The ```init``` function is used in the ELF files for does some initialization before the main function is run.  
 When you see the init function you see it has a loop that in it, calculates an address, and calls it.  
-[https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/1.png]  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/1.png)  
 Now we should find out what is the targets of this call. Ok because this part of the program is before the main, so we sure that the anti-debug protection isn’t enabled. To start the program in gdb and set a bp at the init function and debug it until this loop. If you see the function that is called in this loop you find out two functions. This is because the loop runs just 2 times.  
 One of those functions is a function that seems doesn’t perform a special thing.  
-[2.png] 
+(https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/2.png)    
 Another function is an important function. When you search the address of this function in the IDAPro, you find out the function is a function that uses ```Fork()``` system call to create a child of the current process.  
 [3.png]     
 [4.png]   

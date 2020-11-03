@@ -209,7 +209,122 @@ def KEYINT(k):
                 key = key ^ ((0x9E3779B9 << 32) | 0xC6EF3720) 
                 
 ```    
-If 
-I told that the algorithm used in this program is tiny encryption. 
+Ok there is another trick that used in this program. If you locate the ```chmod``` syscall in the syscall hook area, you find out in performs a function for reading a buffer from the parent (which is the a peace of the KEY value) the uses a function that in that function you see some numbers that pushed in the stack before calls to eax. What is these numbers? Ok when the chmod function is called from parent process, the child1 alter that the parent is calling a syscall and so on. So the chmod function is running in child1 process. If you look at the function that chmod uses it and there are some magic numbers, you see that the value that moves to eax, is a zero value.  
+[pic29.png]    
+So when it calls a zero value, the child1 throw an exception with signal SIGSEGV. But this time, the child2 is alerted that its parent, has a problem. So we should go to child2 code to find out what happens when the child1 generates a SIGSEGV.  
+[pic30.png]    
+Ok so if you continue analyzing the child2, you see that when its parent generates a SIGSEGV, it read all register of the child1 and then looking for the magic number that pushed to stack before the SIGSEGV.    
+[pic31.png]  
+For example for this magic number, it read the values that is pushed in the stack before the ```call eax``` and add them together and moves the result in the eax.  
+[pic32.png]  
+After that the child2, change the value of EIP register with the value of esp register (the esp register, is pointing to return address. That is the address of next instruction after the call eax), to force the child1 to continue from after the ```call eax```.    
+[pic33.png]  
+This the final trick. Long story short, you could analyze the chmod in this way and find out what does it. This is my script for encryption function:  
+```Python  
+def enc(data,a4):
+    
+    v1 = data[0]
+    v2 = data[1]
+    for j in range(16):
+        idx = (j * 8 * 32) - j * 8
+        var6 = v1 ^ a4[idx + 19]
+        var3 = (v2 + a4[idx + 7]) & 0xffffffff
+        var4 = ((var3 >> (a4[idx + 41] & 0x1F)) | (var3 << (-(a4[idx + 41] & 0x1F) & 0x1F))) & 0xffffffff
+        var6 = var6 ^ var4 
+        v1 = v2
+        v2 = var6
 
+    data[0] = v2
+    data[1] = v1
+```
+Now we should find the second part of the password. if you look at the pass2_func, after that encryption loop, the function calls the ```truncate()``` function and sends the file buffer that had went to the encryption function. The first 32 bytes are the second part of the password that we entered. But now are encrypted. Like as other function, the ```truncate()``` function also is the rabbit hole. We should find out its branch in the hooking area and find out what does the truncate syscall.  
+Base on the syscalls in Linux, the first argument moves in the EBX and the second in ECX, so the file buffe is in ebx and 32 is in ecx. Now let’s and look at the branch of the truncate in hooking area.  
+[34.png]    
+This function, reads the ebx register from parent (which in this case ebx contains the encrypted file buffer) and then call a function ```sub_804BBF8```. This function is used in this program many times and if you analyze it, you find out that is used for reading data from the parent. So, in this case this function reads 40000 of bytes from the file buffer offset in parent and save it in a buffer in child1 process. Then it compares the first 32 bytes of the file buffer which is the encrypted second part of user inputted password, with a buffer at address ```81A5100```.    
+[pic35.png]    
+So we could find out that this new 32 buffer is the second part of the password but is encrypted. So we should decrypt it to find the second part of the password. We have the encryption function and we know that this is tiny encryption, so we could reverse it and writes its decryptor function. This is my python decryptor:  
+ ```Python
+def dec(data,a4):
+    
+    v1 = data[0]
+    v2 = data[1]
+    for j in range(15, -1, -1):
+        idx = (j * 8 * 32) - j * 8
+        var6 = v1 ^ a4[idx + 19]
+        var3 = (v2 + a4[idx + 7]) & 0xffffffff
+        var4 = ((var3 >> (a4[idx + 41] & 0x1F)) | (var3 << (-(a4[idx + 41] & 0x1F) & 0x1F))) & 0xffffffff
+        var6 = var6 ^ var4 
+        v1 = v2
+        v2 = var6
 
+    data[0] = v2
+    data[1] = v1
+```  
+Know we should run the decryptor and decrypt the ```81A5100``` buffer.  
+```Python
+def KEYINT(k):
+    num = 0x9C40
+    for i in range(0, num // 4, 2):
+        key = 0x674a1dea4b695809 ## the crc64 value
+        for j in range(16):
+            kk1, k0 = (key & 0xffffffff00000000) >> 32, key & 0xffffffff
+            idx = (j * 8 * 32) - j * 8
+            k[idx + 7]  = k0
+            k[idx + 19] = kk1
+
+            cnt = 0
+            key2 = key
+            while key2:
+                if key2 & 1:
+                    cnt += 1
+
+                key2 >>= 1
+
+            k[idx + 41] = (cnt + (cnt & 1)) // 2
+            odd = False
+            if key & 1:
+                odd = True
+            key = (key >> 1) & 0xffffffffffffffff
+            if odd:
+                key = key ^ ((0x9E3779B9 << 32) | 0xC6EF3720)
+
+def dec(data,a4):
+    
+    v1 = data[0]
+    v2 = data[1]
+    for j in range(15, -1, -1):
+        idx = (j * 8 * 32) - j * 8
+        var6 = v1 ^ a4[idx + 19]
+        var3 = (v2 + a4[idx + 7]) & 0xffffffff
+        var4 = ((var3 >> (a4[idx + 41] & 0x1F)) | (var3 << (-(a4[idx + 41] & 0x1F) & 0x1F))) & 0xffffffff
+        var6 = var6 ^ var4 
+        v1 = v2
+        v2 = var6
+
+    data[0] = v2
+    data[1] = v1
+    
+
+key=[0]*3968;
+v=[0]*2
+f=[0]*10000
+se=[0]*8
+j=0
+KEYINT(key)
+
+for i in range(0,8,2):
+    v[0]=ida_bytes.get_dword(0x081A5100+i*4)
+    v[1]=ida_bytes.get_dword(0x081A5100 +(i+1)*4)
+    dec(v,key)
+    se[j]=v[0]
+    se[j+1]=v[1]
+    print(hex(v[0]))
+    print(hex(v[1]))
+    j=j+2
+    
+fd = open("pass","wb")
+for st in se:
+    fd.write(struct.pack('<I', st))
+fd.close()
+```  
+I ran this script in the IDAPro and when it finishes, the result writes in the ```pass``` file.

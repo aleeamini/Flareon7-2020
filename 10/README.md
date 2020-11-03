@@ -125,8 +125,10 @@ At the beginning of this function we see a call to ```nice``` syscall with the `
 And        
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/18.png)    
 After the call to nice, it negative the EAX value and moves it to s buffer and then sends the s to ```strlen```. But what is the s? for knowing this, we should find out what happens when the nice is calls. Long story short. If you debug the process(I will tell you how we can debug the process), you find out that the nice branch is never executed. This is because the nice syscall is a classic syscall that is removed from the new Linux OS and the new syscalls ```SetPriority and GetPriority``` have replaced with it. And when you call nice in the new Linux OS, the OS calls the SetPrioirty syscall and then GetPriority. So we should trace these two syscalls and if you find the number of these two syscalls you see their branches:  
+```  
 GetPrioirty magic number: 0x60 xor 0xDEADBEEF * 0x1337CAFE = 0x9678E7E2    
 SetPrioirty magic number: 0x61 xor 0xDEADBEEF * 0x1337CAFE = 0x 83411CE4    
+```  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/19.png)    
 If you see, the var_c4 goes to ```EAX``` and a function calls and has just an argument that is the value of var_c4. Var_c4, actually is the EAX value of the parent. Var_c4 is a member of the ```user_reg_struct``` that is described in the previous section. And we know that the EAX value is ```0xA4``` from pass2_func. But if you look at this ``` sub_804C438``` function, you find out that this is a decoding function. You could reverse it and find out its result or you could debug the code. Because I am too lazy to reverse it, I choose the second way. But for debugging we have some limitations. 
 We said that due the Ptrace calls that childs are used, we cannot debug the process. But there is a way for finding the output of the decoding function we need to debug the child1. So, we should disable the child2. One way is to debug the program and let it go until the call to fork for the creation of the child2. Then change the EIP to the address of ```SetPriority``` branch. In this way, the child2 never runs and we could just find out what is the output of the decoding function.  
@@ -158,11 +160,11 @@ unsigned __int64 __cdecl CRC64(unsigned __int64 a1, int a2, unsigned __int64 a3)
   return v5;
 }
 ```
-This function is like the crc functions. If you search and find some crc functions you see this is exactly a crc function. Also I found the code that the author of this file is used. (look at this repo)[https://github.com/srned/baselib/blob/master/crc64.c]   
+This function is like the crc functions. If you search and find some crc functions you see this is exactly a crc function. Also I found the code that the author of this file is used. [CRC64](https://github.com/srned/baselib/blob/master/crc64.c)   
 After that the crc of the string is calculated, we see that the 32 bytes of the password (the second part) copy to the begging of the file buffer with ```memcpy``` and then the crc value, file buffer, and another buffer goes to a function ```sub_804C369```.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/23.png)  
 In this function, we see another function. These functions are to perform some encryption-decryption operations. But there are some tricks for making the analysis hard.  
-You have to reverse these functions and rewrite them in python or any other languages to find the second part of the password. But let’s look at the ``` 0804C217``` function. I named this function as ```KeyInit``` function because there is an initialization of a key buffer that will use in the encryption. The algorithm used in this section is tiny encryption but it is customized. Now if you look at this (repo)[ https://github.com/0x000000AC/Tiny-Encryption-Algorithm/blob/master/tea64.c] you could find out what happens in this function.  
+You have to reverse these functions and rewrite them in python or any other languages to find the second part of the password. But let’s look at the ``` 0804C217``` function. I named this function as ```KeyInit``` function because there is an initialization of a key buffer that will use in the encryption. The algorithm used in this section is tiny encryption but it is customized. Now if you look at this [TinyEnc](https://github.com/0x000000AC/Tiny-Encryption-Algorithm/blob/master/tea64.c) you could find out what happens in this function.  
 Ok if we go to the ```KeyInit``` function, we see some syscalls that exist in the syscall hooking area. For example, we see ```pivot_root, mlockall, uname``` these syscalls is replaced with other operation. For example, the ```pivot_root``` just moves the value in ecx to ebx. Let’s look at it for a better understanding.  
 At first, let’s look at the pivot_root document.    
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/25.png)    

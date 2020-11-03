@@ -341,6 +341,7 @@ I ran this script in the IDAPro and when it finishes, the result writes in the `
 The second part is:  
 #### ```Password_Part2: 4nD_0f_De4th_4nd_d3strUct1oN_4nd```    
 
+## Forth Section(maybe final :D): Password-Part3
 OK we need another part of password. The whole file have analyzed and there isn’t any special trick or tip. But where should we search for third part of the password? There is only one thing. The 40K encrypted buffer. We should find out what is these bytes. We have 2 ways to extract the encrypted buffer (I say encrypted because the algorithm is used for encryption is a tiny which doesn’t matter you use its encrypt function or decrypt function, both of them could use for encryption or decryption. but it depends which of them is used.) Now we reverse the encryption and could use it to encrypt the file buffer and then find out what are these data.  
 ```Python
 def KEYINT(k):

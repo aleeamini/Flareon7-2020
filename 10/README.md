@@ -42,39 +42,22 @@ At the address ``` 080491D7```, the child1 calls Ptrace with ```PTRACE_SYSEMU or
 ```C
 struct user_regs_struct
 {
- 
 long int ebx;
- 
 long int ecx;
- 
 long int edx;
- 
 long int esi;
- 
 long int edi;
- 
 long int ebp;
- 
 long int eax;
- 
 long int xds;
- 
 long int xes;
- 
 long int xfs;
- 
 long int xgs;
- 
 long int orig_eax;
- 
 long int eip;
- 
 long int xcs;
- 
 long int eflags;
- 
 long int esp;
- 
 long int xss;
 };
 ``` 
@@ -88,7 +71,14 @@ Now if you look at the code of child1 you see that if the result is 0xF7FF4E38, 
 And you see that when the parent calls the execve, actually the real execve doesn’t run and the child just does some malloc and another function, and after that continue that program. There are other syscalls that the child bypasses them and performs another functionality.  
 I wrote a code to generates these magic numbers of the syscalls:  
 ```C
-Code 
+int main()
+{
+    int i = 0;
+    for (i = 0; i < 0x180; i++)
+    {
+        std::cout << std::hex << i << " :0x" << std::hex << (i ^ 0xdeadbeef) * 0x1337cafe<<std::endl;
+    }   
+}
 ```  
 Ok, you could analyze every branch of the hooking system and find out what happens when a syscall was called in the parent.  
 But where should we search for the flag? Ok in the ``` 0804993A``` is a check that checks the signal of the parent program with ```SIGILL or 0x4```. This signal is generating when the parent process encounters an invalid instruction. Do you remember when this happens? If you remember the child overwrite the first 2 bytes of that function which checks the input buffer with sunshine string, with two invalid bytes. So, when the parent process goes to check the password, it will throw a SIGILL signal due to those invalid bytes and the child process finds out that the user entered the input and the parent process now wants to checks it.
@@ -99,7 +89,28 @@ Now let’s analyze this function. The function performs some calls to functions
 Ok, there is a check for the first part of the password. 
 You could reverse all these functions and find out what happens there and find out the password. But there is another easy way. If you look at the end of this function, you see a ```memcmp``` that compares our entered password, with a 16 byte buffer and if there was equal, it continues, otherwise, it goes to the end of the function. What we can do is that hook the ```memcmp``` and checks the arguments. Ok I used ```LD_PRELOAD``` hooking method in Linux.  
 ```C
+#include <stdlib.h>
+#include <dlfcn.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 
+int (*orig_memcmp)(const void*,const void*,size_t);
+int memcmp(const void* s1,const void* s2,size_t n)
+{
+	printf("memcmp:%d\n",n);
+	size_t i;
+	for (i = 0; i < n; i++)	
+	{
+    		printf("%c", *(char*)(s2+i));
+	}
+	printf("\n");
+	if(!orig_memcmp)
+		orig_memcmp=dlsym(RTLD_NEXT,"memcmp");
+
+	int result=orig_memcmp(s1,s2,n);
+	return result;
+}
 ```
 
 Ok now we have the first part of the password. Continue this function until find out the second part. The password has 3 parts and you should find every part from a special function.  
@@ -200,4 +211,5 @@ def KEYINT(k):
 ```    
 If 
 I told that the algorithm used in this program is tiny encryption. 
+
 

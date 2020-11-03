@@ -119,6 +119,7 @@ int memcmp(const void* s1,const void* s2,size_t n)
 ```
 After compile it as a Library and run the file:  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/hook.png)  
+#### ```Password_Part1: w3lc0mE_t0_Th3_l```  
 Ok now we have the first part of the password. Continue this function until find out the second part. The password has 3 parts and you should find every part from a special function.  
 ## Third Section: Password-Part2
 Now after the first 16 bytes of the password was correct; the second 16 bytes of the password go to another function for checking. I named this function ```pass2_func```.  
@@ -338,5 +339,5 @@ fd.close()
 ```  
 I ran this script in the IDAPro and when it finishes, the result writes in the ```pass``` file.  
 The second part is:  
-#### ```4nD_0f_De4th_4nd_d3strUct1oN_4nd```  
+####```Password_Part2: 4nD_0f_De4th_4nd_d3strUct1oN_4nd```  
 

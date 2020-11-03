@@ -61,11 +61,14 @@ long int esp;
 long int xss;
 };
 ``` 
-You know that in Linux’s syscalls, the number of the syscall, will put in EAX, so the child1 read RAX and xor it with ```DEADBEEF``` then multiple it by ```1337CAFE``` then, compare the result with some value.  
+You know that in Linux’s syscalls, the number of the syscall, will put in EAX, so the child1 read RAX and xor it with ```DEADBEEF``` then multiple it by ```1337CAFE``` then, compare the result with some value. [Linux_Syscalls](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86-32_bit)  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/12.png)  
 Every branch goes to a special function and if you look, there is a hooking system that changes the functionality of a syscall. For example, if the parent calls the ```execve``` syscall, the tracer will notice that the parent calls a syscall. It gets the syscall number that stored in EAX register. 0x0b is the syscall number of the ```execve``` in x86:  
+```
 0x0b XOR 0xDEADBEEF = 0xDEADBEE4  
-0xDEADBEE4 * 0x1337CAFE= 10B76D10F7FF4E38 convert to int = 0xF7FF4E38 
+0xDEADBEE4 * 0x1337CAFE= 10B76D10F7FF4E38 convert to int = 0xF7FF4E38
+```  
+
 Now if you look at the code of child1 you see that if the result is 0xF7FF4E38, it goes to address ```0x0804948B```.   
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/13.png)  
 And you see that when the parent calls the execve, actually the real execve doesn’t run and the child just does some malloc and another function, and after that continue that program. There are other syscalls that the child bypasses them and performs another functionality.  

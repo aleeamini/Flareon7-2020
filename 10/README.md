@@ -327,4 +327,6 @@ for st in se:
     fd.write(struct.pack('<I', st))
 fd.close()
 ```  
-I ran this script in the IDAPro and when it finishes, the result writes in the ```pass``` file.
+I ran this script in the IDAPro and when it finishes, the result writes in the ```pass``` file.  
+The second part is: #### ```4nD_0f_De4th_4nd_d3strUct1oN_4nd```  
+

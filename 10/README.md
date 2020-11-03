@@ -1,4 +1,5 @@
 # break  
+## First Section: Static Analysis  
 This challenge is a very hard one. You have a Linux ELF file that uses many anti-debugging techniques that don’t let you debug and analyze it easily.  
 The file is x86 ELF and when you run it, shows you a prompt to enter a password.  
 OK, when you open it in the IDAPro, you see in the main function is a password check routine that checks the input buffer with the string ```sunsh1n3_4nd_r41nb0ws@flare-on.com```. But when you enter this string as a password, t shows you ```sorry, but 'sorry I stole your input :)```.  
@@ -83,6 +84,7 @@ int main()
     }   
 }
 ```  
+## Second Section: Password-Part1  
 Ok, you could analyze every branch of the hooking system and find out what happens when a syscall was called in the parent.  
 But where should we search for the flag? Ok in the ``` 0804993A``` is a check that checks the signal of the parent program with ```SIGILL or 0x4```. This signal is generating when the parent process encounters an invalid instruction. Do you remember when this happens? If you remember the child overwrite the first 2 bytes of that function which checks the input buffer with sunshine string, with two invalid bytes. So, when the parent process goes to check the password, it will throw a SIGILL signal due to those invalid bytes and the child process finds out that the user entered the input and the parent process now wants to checks it.
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/14.png)  
@@ -115,8 +117,10 @@ int memcmp(const void* s1,const void* s2,size_t n)
 	return result;
 }
 ```
-
+After compile it as a Library and run the file:  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/hook.png)  
 Ok now we have the first part of the password. Continue this function until find out the second part. The password has 3 parts and you should find every part from a special function.  
+## Third Section: Password-Part2
 Now after the first 16 bytes of the password was correct; the second 16 bytes of the password go to another function for checking. I named this function ```pass2_func```.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/16.png)  
 
@@ -333,5 +337,6 @@ for st in se:
 fd.close()
 ```  
 I ran this script in the IDAPro and when it finishes, the result writes in the ```pass``` file.  
-The second part is: #### ```4nD_0f_De4th_4nd_d3strUct1oN_4nd```  
+The second part is:  
+#### ```4nD_0f_De4th_4nd_d3strUct1oN_4nd```  
 

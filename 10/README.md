@@ -129,15 +129,15 @@ If you see, the var_c4 goes to ```EAX``` and a function calls and has just an ar
 We said that due the Ptrace calls that childs are used, we cannot debug the process. But there is a way for finding the output of the decoding function we need to debug the child1. So, we should disable the child2. One way is to debug the program and let it go until the call to fork for the creation of the child2. Then change the EIP to the address of ```SetPriority``` branch. In this way, the child2 never runs and we could just find out what is the output of the decoding function.  
 OK for this job run the program with gdb and set a bp on the ```08049152``` and start the program.  
 ### Tip: after the fork, the gdb switches to the forked process by default. So when we run the program under gdb, it goes automatically to child1.  
-Ok now when we reach this point, we could change the ```EIP``` to ```0x08049554``` where is the address of the setpriority branch. Then we change the value of the EAX to ```0xA4``` and run the decoding function. 
-![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/20.png)    
-Now change the eip:  
-![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/21.png)  
+Ok now when we reach this point, we could change the ```EIP``` to ```0x08049554``` where is the address of the setpriority branch. Then we change the value of the EAX to ```0xA4``` and run the decoding function.    
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/20.png)        
+Now change the eip:    
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/21.png)     
 And after the call we see the output string in eax :  
-![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/22.png)    
-Now we find out the output of the SetPriority (or Nice) . this is the string that used in pass2_func and goes to strlen function.  
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/22.png)       
+Now we find out the output of the SetPriority (or Nice) . this is the string that used in pass2_func and goes to strlen function.    
 ```nice(0xa4): This string has no purpose and is merely here to waste your time.```      
-Ok return to analyze the pass2_func. Now we find out that the output of the nice call goes to the strlen function and then we see a call to a function.  
+Ok return to analyze the pass2_func. Now we find out that the output of the nice call goes to the strlen function and then we see a call to a function.    
 ```C
 unsigned __int64 __cdecl CRC64(unsigned __int64 a1, int a2, unsigned __int64 a3)
 {

@@ -430,3 +430,32 @@ Ok now we know the entrypoint of the shellcode. But we need just its offset beca
 Now open the shellcode in IDAPro and go to 0x7530 offset:  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/42.png)  
 
+This shellcode performs some calculations and at the end, compares 2 values and if they were equal, it writes the 32 value in eax register of parent and exit otherwise, write -1 in eax and exits.  So we should analyze this function and find out what happens there.  
+At first, we see that the shellcode uses a ```call $5```, so it just push the address of the next instruction(```pop eax```) in the stack and goes to next instruction. So now when the ```pop eax``` executes, the address of itself is moves to eax. ```eax= 7530```.  
+[sh2.png]
+Subtracts ```0x0DCC``` from it and stores it in a variable that I named it ``` first_of_start_shellcode```.  
+Ok after that we see a function is called three times and if you look at this function you find out that this function performs some operation like ```memset()``` and zeroes a buffer.    
+[sh3.png]  
+Now we see an adds operation , the ``` first_of_start_shellcode+12A6``` and passes the result to a function.  
+[sh4.png]  
+```0x7530+12A6= 0x87D6```  
+[sh5.png]  
+We see some big numbers in these address that is used. Ok if we look at the ```sub_7E07``` which I named it ``` bn_from_hex```, we see that this function makes hex number from a string number.  So we could guess that this is a Big Number calculation code. I searched in Google and saw some bignumbers codes in github. You could check this repo(https://github.com/ilia3101/Big-Integer-C/blob/master/BigInt.c) and find out every function what does in this shellcode.  
+Long story short. This is an encryption function that uses a public key. The algorithm is used in the shellcode is a known algorithm , [EL-Gamal]( https://www.geeksforgeeks.org/elgamal-encryption-algorithm/).  
+If you look at the code, you see that it encrypt the third part of entered password and then compare it with var_988 (bn_988). So we could find out that the var_988 is the  encrypted third part of the password. But how we can decrypt it to find the password? You need a [Multiplicative inverse] (https://en.wikipedia.org/wiki/Multiplicative_inverse#:~:text=In%20mathematics%2C%20a%20multiplicative%20inverse,%2Fb%20is%20b%2Fa.) to decrypt it.  
+This is my script:  
+```Python  
+from Crypto.Util.number import long_to_bytes, inverse
+
+p = 0xd1cc3447d5a9e1e6adae92faaea8770db1fab16b1568ea13c3715f2aeba9d84f
+s = 0xc10357c7a53fa2f1ef4a5bf03a2d156039e7a57143000c8d8f45985aea41dd31
+c2 = 0xd036c5d4e7eda23afceffbad4e087a48762840ebb18e3d51e4146f48c04697eb
+
+p3 = long_to_bytes((c2 * inverse(s, p)) % p)[::-1]
+print(p3)  
+
+```
+
+
+
+

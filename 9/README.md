@@ -126,5 +126,8 @@ So we could find that what will happened. This driver register a callback routin
 Finaly the registered function in the second driver, is called when every request for modifying the Registry comes to kernel. This function checks the address of the key that the caller wants to modify it and if this address, includes the ```Config``` string it does some operation, otherwise it lets them to go as a normal way. This point is where that this check is taken.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/9/pics/wcsstr.png)    
 So you could set a bp at this point and continue the debugging until the targeted key will come. When you continue this routine after some functions, you see that a string is generated ```H@n $h0t First!```. This is the password and also we have the encrypted flag. The algorithm is used is a RC4 and you can decrypt the flag with this password.  
+  
+    
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/9/pics/flag.png)      
 ### ```Flag: S0_m@ny_cl@sse$_in_th3_Reg1stry@flare-on.com```  
 

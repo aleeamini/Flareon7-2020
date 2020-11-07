@@ -16,7 +16,7 @@ Another function is an important function. When you search the address of this f
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/4.png)    
 After the fork, the child process starts its job. When you see the child functionality, you find out that this function uses some system calls of the Linux for detecting debugging and defeat from debugging.    
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/5-.png)  
-### Tip: you could use IDA symbolic constant feature, to make easy your job. It could detect the Ptraces requests and flags and also the signals.
+### Tip: You could use IDA symbolic constant feature, to make easy your job. It could detect the Ptraces requests and flags and also the signals.  
 The most used function is ```PTRACE```, which is used to attach to the parent process and checks the state of it. the child process uses ```ATACH``` method of PTRACE, to attach to its parent and then control it. if you see more the child function, you find out that when it couldn’t attach to its parent, it finds out that another process, attaches to the parent. So it detects that a debugger comes in and then, terminate the parent process with signal 9.  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/10/pics/5.png)  
 ### TIP:A process can only be attached by another process at a time.  

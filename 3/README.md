@@ -6,7 +6,7 @@ After debugging the code, I saw that strings ```Score``` and ```High Score``` in
 
 I set some breakpoints in this function and traced the game, I found that the game checks some rules and increase the score or restart the game.  
 In the game we have two types of block: M blocks and F blocks. We should pass from under the M blocks and jump from F blocks. so we can get one score.  
-And at every success pass, the game checks the score with value ```0x128 or 256```.  
+And at every success pass, the game checks the score with value ```0x128 or 296```.  
 At the first i decided to change the increment value from 1 to 16 or a higher number. but nothing happened. Because the game has an Anti-Cheat function.  
 The Anti-Cheat mechanism checks some values and does not depend just on score value. And if we can get the 0x128 score by changing the increment function, it just shows us a  Winner window, not the flag.  
 After some checking the functions and static analysis in IDAPro, I found two interesting functions. ```OnCollide()```.  

@@ -15,7 +15,7 @@ Let’s do some analysis. When you open the file in the ```Resource Hacker``` yo
 I thought, I must win the game, to get the flag. If you look at the engine's code, you see a branch which used for checking the winner:  
 ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/check_the_winner.png)  
 The idea is to patch the file and change the ```X``` for ```O``` and vice versa. But how we can patch the file? It’s simple.  
-The engine file is embedded in the main executable, so you can use a Hex-editor to find these instruction and patch them statically. For example ```3C 58```, compare the ```al``` with ``` 0x58 or X```. I search the ```3C58``` in the Hex Editor and change the ```0x58``` to ```0x4F or O```.  
+The engine file is embedded in the main executable, so you can use a Hex-editor to find these instruction and patch them statically. For example ```3C 58```, compares the ```al``` with ``` 0x58 or X```. I searched the ```3C58``` in the Hex Editor and change the ```0x58``` to ```0x4F or O```.  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/swapxo.png)  
 Now run the game and let the X to wins the game. Ok now we see a string like the flag. But it isn’t the correct flag.  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/notflag.png)  
@@ -26,7 +26,11 @@ What is the ```AL```? OK we see a call that probably ```AL``` is the return valu
 When you run the WSL Linux(in this case I used the ubuntu). You can find the engine is running in the Linux. And we can attach the debugger to it and set a bp at this call and continue the game until the debugger breaks at this point.  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/ps.png)  
 
-I used the ```pwndbg``` for debugging in the Linux. As you see in the picture, when the function is called, the eax changed to ```0x58``` that is the ```X```. So this function returns the character of the winner. So I patched this call and changed it with a ```Mov eax, 0x4F```.  
+I used the ```pwndbg``` for debugging in the Linux. As you see in the picture, when the function is called, the eax changed to ```0x58``` that is the ```X```.    
+![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/bp.png)    
+    
+
+So this function returns the character of the winner. So I patched this call and changed it with a ```Mov eax, 0x4F```.  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/patchcall.png)  
 Now the executable file is something like this:  
  ![alt text](https://github.com/aleeamini/Flareon7-2020/blob/main/8/pathced.png)  
